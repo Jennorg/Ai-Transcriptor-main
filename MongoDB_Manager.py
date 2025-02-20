@@ -45,6 +45,20 @@ def save_transcription_to_mongodb(parent, transcription):
         QPushButton:pressed {
             background-color: #367c39;
         }
+        QPushButton#cancel {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        QPushButton#cancel:hover {
+            background-color: #e53935;
+        }
+        QPushButton#cancel:pressed {
+            background-color: #d32f2f;
+        }
     """)
 
     layout = QVBoxLayout(dialog)
@@ -55,16 +69,23 @@ def save_transcription_to_mongodb(parent, transcription):
 
     button_layout = QHBoxLayout()
     ok_button = QPushButton("Aceptar")
+    cancel_button = QPushButton("Cancelar")
+    cancel_button.setObjectName("cancel")
     button_layout.addWidget(ok_button)
+    button_layout.addWidget(cancel_button)
     layout.addLayout(button_layout)
 
     def accept():
         dialog.accept()
 
-    ok_button.clicked.connect(accept)
+    def reject():
+        dialog.reject()
 
-    if dialog.exec() == QDialog.Accepted and line_edit.text().strip():
-        name = line_edit.text().strip()
+    ok_button.clicked.connect(accept)
+    cancel_button.clicked.connect(reject)
+
+    if dialog.exec() == QDialog.Accepted:
+        name = line_edit.text().strip() or "Sin nombre"
         try:
             document = {
                 "nombre": name, 
@@ -76,4 +97,4 @@ def save_transcription_to_mongodb(parent, transcription):
         except Exception as e:
             print(f"Error al guardar en MongoDB: {e}")
     else:
-        print("Operación cancelada o nombre vacío.")
+        print("Operación cancelada.")

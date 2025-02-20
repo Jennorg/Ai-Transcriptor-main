@@ -2,8 +2,26 @@
 import sys
 from PySide6.QtWidgets import (QApplication, QWidget, QLabel,
                             QPushButton, QVBoxLayout, QHBoxLayout, QFrame, QSizePolicy, QMessageBox)
+from PySide6.QtGui import QIcon, QPixmap, QPainter, QColor, Qt
+from PySide6.QtCore import QSize  # Importar QSize desde QtCore
 import Transcripcion_con_Assembly
 from lista_texto import MongoDBViewer  # Importa MongoDBViewer
+import os
+
+# Direcciones de iconos
+icon_path_upload = os.path.join(os.path.dirname(__file__), "images", "upload.png")
+icon_path_transcribe = os.path.join(os.path.dirname(__file__), "images", "transcription.png")
+icon_path_list = os.path.join(os.path.dirname(__file__), "images", "list.png")
+icon_path_record = os.path.join(os.path.dirname(__file__), "images", "rec-button.png")
+icon_path_stop = os.path.join(os.path.dirname(__file__), "images", "stop-button.png")
+
+def colorize_icon(icon_path, color):
+    pixmap = QPixmap(icon_path)
+    painter = QPainter(pixmap)
+    painter.setCompositionMode(QPainter.CompositionMode_SourceIn)
+    painter.fillRect(pixmap.rect(), QColor(color))
+    painter.end()
+    return QIcon(pixmap)
 
 class AudioRecorderUI(QWidget):
     def __init__(self):
@@ -45,26 +63,46 @@ class AudioRecorderUI(QWidget):
                 background-color: #367c39;
             }
 
-            QPushButton#recordStopButton {
-                background-color: #f44336; 
+
+            QPushButton#recordButton {
+                background-color: #4CAF50;
                 color: white;
                 border: none;
-                padding: 15px 25px; 
-                border-radius: 25px; 
-                font-size: 18px;
-                margin-top: 20px; 
-                width: 100%;
-                max-width: 100%; 
+                padding: 10px 20px;
+                border-radius: 5px;
+                font-size: 16px;
+                margin-bottom: 10px;
+                width: 100%; 
+                text-align: left; 
             }
 
-            QPushButton#recordStopButton:hover {
+            QPushButton#recordButton:hover {
+                background-color: #45a049; 
+            }
+
+            QPushButton#recordButton:pressed {
+                background-color: #367c39;
+            }
+
+            QPushButton#stopButton {
+                background-color: #f44336;
+                color: white;
+                border: none;
+                padding: 10px 20px;
+                border-radius: 5px;
+                font-size: 16px;
+                margin-bottom: 10px;
+                width: 100%; 
+                text-align: left; 
+            }
+
+            QPushButton#stopButton:hover {
                 background-color: #d32f2f; 
             }
 
-            QPushButton#recordStopButton:pressed {
+            QPushButton#stopButton:pressed {
                 background-color: #b71c1c;
             }
-
 
             /* Main content styles */
             QWidget#main_content {
@@ -100,10 +138,21 @@ class AudioRecorderUI(QWidget):
         # Sidebar Buttons (Upload and Transcribe at the top)
         self.upload_button = QPushButton("Subir Archivo")
         self.upload_button.setObjectName("sidebarButton") # For CSS Styling
+        self.upload_button.setIcon(colorize_icon(icon_path_upload, "#FFFFFF"))  # Set icon with color
+        self.upload_button.setIconSize(QSize(24, 24))
+        self.upload_button.setLayoutDirection(Qt.RightToLeft)
+
         self.transcribe_button = QPushButton("Transcribir")
         self.transcribe_button.setObjectName("sidebarButton") # For CSS Styling
+        self.transcribe_button.setIcon(colorize_icon(icon_path_transcribe, "#FFFFFF"))  # Set icon with color
+        self.transcribe_button.setIconSize(QSize(24, 24))
+        self.transcribe_button.setLayoutDirection(Qt.RightToLeft)
+
         self.list_texts_button = QPushButton("Listar Textos")  # Nuevo botón
         self.list_texts_button.setObjectName("sidebarButton")  # For CSS Styling
+        self.list_texts_button.setIcon(colorize_icon(icon_path_list, "#FFFFFF"))  # Set icon with color
+        self.list_texts_button.setIconSize(QSize(24, 24))
+        self.list_texts_button.setLayoutDirection(Qt.RightToLeft)
 
         sidebar_layout.addWidget(self.upload_button)
         sidebar_layout.addWidget(self.transcribe_button)
@@ -112,9 +161,16 @@ class AudioRecorderUI(QWidget):
 
         # Record and Stop Buttons at the bottom of sidebar
         self.record_button = QPushButton("Grabar")
-        self.record_button.setObjectName("recordStopButton") # For CSS Styling
+        self.record_button.setObjectName("recordButton") # For CSS Styling
+        self.record_button.setIcon(colorize_icon(icon_path_record, "#FFFFFF"))  # Set icon with color
+        self.record_button.setIconSize(QSize(24, 24))
+        self.record_button.setLayoutDirection(Qt.RightToLeft)
+
         self.stop_button = QPushButton("Detener")
-        self.stop_button.setObjectName("recordStopButton") # For CSS Styling
+        self.stop_button.setObjectName("stopButton") # For CSS Styling
+        self.stop_button.setIcon(colorize_icon(icon_path_stop, "#FFFFFF"))  # Set icon with color
+        self.stop_button.setIconSize(QSize(24, 24))
+        self.stop_button.setLayoutDirection(Qt.RightToLeft)
 
         sidebar_layout.addWidget(self.record_button)
         sidebar_layout.addWidget(self.stop_button)
