@@ -1,5 +1,5 @@
 import sys
-from PySide6.QtWidgets import (QApplication, QWidget, QVBoxLayout, QLabel, QLineEdit, QPushButton, QListWidget, QListWidgetItem,QFileDialog, QTextEdit, QHBoxLayout)
+from PySide6.QtWidgets import (QApplication, QWidget, QVBoxLayout, QLabel, QLineEdit, QPushButton, QListWidget, QListWidgetItem, QFileDialog, QTextEdit, QHBoxLayout)
 from PySide6.QtGui import QIcon
 from pymongo import MongoClient
 from export_utils import save_as_pdf, save_as_txt
@@ -7,14 +7,13 @@ import os
 from datetime import datetime
 from chat import obtener_respuesta
 
-#Direcciones de iconos
-
+# Direcciones de iconos
 icon_path_pdf = os.path.join(os.path.dirname(__file__), "images", "pdf_icon.png")
 icon_path_txt = os.path.join(os.path.dirname(__file__), "images", "txt_icon.png")
 icon_path_ia = os.path.join(os.path.dirname(__file__), "images", "ia_icon.png")
 
 class DetailWindow(QWidget):
-# Ventana emergente para mostrar detalles de un documento
+    # Ventana emergente para mostrar detalles de un documento
     def __init__(self, nombre, texto, fecha):
         super().__init__()
         self.setWindowTitle("Detalle del Texto")
@@ -79,8 +78,6 @@ class DetailWindow(QWidget):
         self.new_window.setLayout(layout)
         self.new_window.show()
 
-
-
 class MongoDBViewer(QWidget):
     def __init__(self):
         super().__init__()
@@ -108,7 +105,7 @@ class MongoDBViewer(QWidget):
         self.next_button = QPushButton("Siguiente", self)
 
         # Conectar señales
-        self.search_button.clicked.connect(self.load_data)
+        self.search_button.clicked.connect(self.search_data)
         self.next_button.clicked.connect(self.next_page)
         self.prev_button.clicked.connect(self.prev_page)
         self.result_list.itemClicked.connect(self.show_details)
@@ -128,6 +125,11 @@ class MongoDBViewer(QWidget):
         self.setLayout(self.layout)
 
         # Cargar datos iniciales
+        self.load_data()
+
+    def search_data(self):
+        """Realiza una búsqueda y restablece la página a 0"""
+        self.page = 0
         self.load_data()
 
     def load_data(self):
