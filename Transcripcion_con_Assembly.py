@@ -2,7 +2,7 @@
 import sounddevice as sd
 import wavio
 import assemblyai as aai
-from PySide6.QtWidgets import (QFileDialog,QMessageBox)
+from PySide6.QtWidgets import (QFileDialog, QMessageBox, QDialog, QVBoxLayout, QLabel, QPushButton, QHBoxLayout)
 from PySide6.QtCore import QTimer  # ¡Importante añadir esta línea!
 from pymongo import MongoClient  
 from MongoDB_Manager import save_transcription_to_mongodb
@@ -91,35 +91,68 @@ class AudioRecorder:
             self.transcription_label.setText("No hay archivo para transcribir") # Usar setText para QLabel en PySide6
             return
         
-        #  Mostrar ventana emergente para elegir el modo de transcripción
-        msg_box = QMessageBox()
-        msg_box.setWindowTitle("Modo de Transcripción")
-        msg_box.setText("¿Cómo deseas transcribir el audio?")
+        # Crear un QDialog personalizado para aplicar estilos
+        dialog = QDialog(self.master)
+        dialog.setWindowTitle("Modo de Transcripción")
+        dialog.setStyleSheet("""
+            QDialog {
+                background-color: #f0f0f0;
+                font-family: "Arial";
+                font-size: 14px;
+            }
+            QLabel {
+                color: #333;
+            }
+            QPushButton {
+                background-color: #4CAF50;
+                color: white;
+                border: none;
+                padding: 10px 20px;
+                border-radius: 5px;
+                font-size: 14px;
+            }
+            QPushButton:hover {
+                background-color: #45a049;
+            }
+            QPushButton:pressed {
+                background-color: #367c39;
+            }
+        """)
 
-        # Agregar botones personalizados
-        button_monologo = msg_box.addButton("Como monólogo", QMessageBox.AcceptRole)
-        button_dialogo = msg_box.addButton("Como diálogo", QMessageBox.RejectRole)
+        layout = QVBoxLayout(dialog)
+        label = QLabel("¿Cómo deseas transcribir el audio?")
+        layout.addWidget(label)
 
-        msg_box.exec()
+        button_layout = QHBoxLayout()
+        button_monologo = QPushButton("Como monólogo")
+        button_dialogo = QPushButton("Como diálogo")
+        button_layout.addWidget(button_monologo)
+        button_layout.addWidget(button_dialogo)
+        layout.addLayout(button_layout)
 
-        # Determinar qué opción eligió el usuario
-        if msg_box.clickedButton() == button_monologo:
+        def select_monologo():
             self.modo_transcripcion = "monologo"
-        elif msg_box.clickedButton() == button_dialogo:
+            dialog.accept()
+
+        def select_dialogo():
             self.modo_transcripcion = "dialogo"
+            dialog.accept()
+
+        button_monologo.clicked.connect(select_monologo)
+        button_dialogo.clicked.connect(select_dialogo)
+
+        if dialog.exec() == QDialog.Accepted:
+            # Subir archivo a AssemblyAI
+            transcript_text = self.transcribe_with_assemblyai(self.audio_file_path)
+
+            if transcript_text:
+                self.transcription_label.setText(f"Transcripción: {transcript_text}") # Usar setText para QLabel en PySide6
+                # Guardar la transcripción en un archivo .txt
+                self.save_transcription_to_file(transcript_text)
+            else:
+                self.transcription_label.setText("Error al transcribir el archivo") # Usar setText para QLabel en PySide6
         else:
             self.transcription_label.setText("No se seleccionó un modo de transcripción.")
-            return  #  No continuar si no se eligió un modo
-
-        # Subir archivo a AssemblyAI
-        transcript_text = self.transcribe_with_assemblyai(self.audio_file_path)
-
-        if transcript_text:
-            self.transcription_label.setText(f"Transcripción: {transcript_text}") # Usar setText para QLabel en PySide6
-            # Guardar la transcripción en un archivo .txt
-            self.save_transcription_to_file(transcript_text)
-        else:
-            self.transcription_label.setText("Error al transcribir el archivo") # Usar setText para QLabel en PySide6
 
     def transcribe_with_assemblyai(self, file_path):
         try:
