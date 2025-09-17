@@ -168,42 +168,6 @@ python src/ui/main_window.py
 - `google-generativeai` - API de Google Generative AI
 - `python-dotenv` - Manejo de variables de entorno
 
-### Dependencias del Sistema
-
-- `portaudio19-dev` - Biblioteca de audio
-- `python3-pyaudio` - Bindings de Python para PortAudio
-
-## 🔧 Solución de Problemas
-
-### Error: "PortAudio library not found"
-
-```bash
-# Instalar PortAudio
-sudo apt install -y portaudio19-dev python3-pyaudio
-
-# Reinstalar sounddevice
-pip uninstall sounddevice -y
-pip install sounddevice
-```
-
-### Error: "ModuleNotFoundError"
-
-```bash
-# Instalar todas las dependencias
-pip install -r requirements.txt
-```
-
-### Problemas con la Interfaz Gráfica
-
-- Asegúrate de tener un servidor X11 ejecutándose (Linux)
-- En Windows, instala Microsoft Visual C++ Redistributable
-
-### Problemas de Audio
-
-- Verifica que el micrófono esté conectado y funcionando
-- Comprueba los permisos de audio en tu sistema
-- En Linux, asegúrate de que el usuario esté en el grupo `audio`
-
 ## 🚨 Advertencias
 
 - Las advertencias de QPainter en la consola son normales y no afectan la funcionalidad
@@ -227,17 +191,6 @@ Las contribuciones son bienvenidas. Por favor:
 4. Push a la rama
 5. Abre un Pull Request
 
-## 📄 Licencia
-
-Este proyecto está bajo la Licencia MIT. Ver el archivo `LICENSE` para más detalles.
-
-## 📞 Soporte
-
-Si encuentras algún problema o tienes preguntas:
-
-1. Revisa la sección de solución de problemas
-2. Busca en los issues existentes
-3. Crea un nuevo issue con detalles del problema
 
 ---
 
