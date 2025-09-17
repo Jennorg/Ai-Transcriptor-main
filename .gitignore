@@ -1,25 +1,56 @@
-# Archivos y carpetas de Python
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-
-# Archivos de entorno virtual
-venv/
+# Archivos de entorno
 .env
 
-# Archivos de configuración de editores de código
-.vscode/
-.idea/
+# Entorno virtual de Python
+venv/
+env/
+ENV/
 
-# Archivos de sistema
+# Archivos de Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Archivos de audio temporales
+*.wav
+*.mp3
+*.m4a
+*.flac
+
+# Archivos generados por la aplicación
+grabacion.wav
+transcripcion.txt
+
+# Archivos de transcripción exportados
+transcriptions/
+exports/
+
+# Archivos del sistema
 .DS_Store
 Thumbs.db
 
-# Salida de compilación
-*.log
-*.tmp
+# Archivos de IDE
+.vscode/
+.idea/
+*.swp
+*.swo
 
-# Archivos específicos de tu proyecto
-transcripcion.txt
-images/
+# Logs
+*.log
